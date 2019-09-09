@@ -8285,6 +8285,11 @@ react-transition-group@^4.0.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-use-wavelet@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-use-wavelet/-/react-use-wavelet-0.2.2.tgz#10308857df4b2db2721669b858a7b8ba31f6f948"
+  integrity sha512-3HRUP7XzN+bJU/FuJJ+Iowvd6UVs7tCLHOGWuQ2nBxLDgOIi5jMJ/RIZTveHwrzo3A6v76dpkdFzt2XNW9fEUQ==
+
 react@^16.9.0:
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.9.0.tgz#40ba2f9af13bc1a38d75dbf2f4359a5185c4f7aa"
