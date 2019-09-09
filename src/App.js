@@ -7,6 +7,13 @@ import {ThemeProvider} from '@material-ui/styles';
 import theme from './theme';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 
+
+
+
+
+
+
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
