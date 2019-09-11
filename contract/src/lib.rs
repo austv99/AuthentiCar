@@ -69,11 +69,10 @@ impl CarLog {
             vin:params.read()
       };
         for car in &self.logs {
-            if{
-                car_check.vin==car.vin
-            vehicles.insert(0, format!("<{}> {} {}", &to_hex_string(car.sender), car.owners_name, car.description));
+            if car_check.vin==car.vin{
+            vehicles.insert(0, format!("<{}> {} {}", &to_hex_string(car.sender), car.owners_name, car.description()));
             }
-            log(&vehicles.join("\n"));
+            log(&vehicles.join("\n"))
         }
         log(&cars.join("\n"));
         Ok(())
