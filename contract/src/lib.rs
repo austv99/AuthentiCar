@@ -7,8 +7,14 @@ use std::collections::VecDeque;
 
 struct Car {
     sender: [u8; 32],
-    name: String,
+    vin: String,
+    owners_name: String,
     description: String,
+    title: String,
+    id: String
+}
+struct Car_check{
+    vin:String
 }
 
 struct CarLog {
@@ -27,27 +33,47 @@ impl CarLog {
     fn init(_params: &mut Parameters) -> Self {
         Self { logs: VecDeque::new() }
     }
+#[basic functions]
     fn log_car(&mut self, params: &mut Parameters) -> Result<(), String> {
         let car = Car {
             sender: params.sender, 
-            name: params.read(), 
+            vin:params.read(),
+            owners_name: params.read(), 
             description: params.read(),
-            };
+            title: params.read(),
+            id: params.read()
+      };
+        if car.vin.len() == 0{
+            return Err("Car must have vin".into());
+        }
         if car.description.len() == 0 {
-            return Err("Car must have description.".to_string());
+            return Err("Car must have description.".into());
         }
-        if car.name.len() == 0 {
-            return Err("Car must have a name.".to_string());
+        if car.owners_name.len() == 0 {
+            return Err("Car must have a owner's name.".into());
         }
-        // Push new car into logs
+        if car.title.len() == 0{
+            return Err("Car must have title".into());
+        }
+        if car.id.len() == 0{
+            return Err("Car must have id number".into());
+        }
+#[Push new car into logs]
         self.logs.push_back(car);
         Ok(())
 
     }
     fn get_cars(&mut self, _params: & mut Parameters) -> Result<(), String> {
-        let mut cars = Vec::new();
-        for vehicles in &self.logs {
-            cars.insert(0, format!("<{}> {} {}", &to_hex_string(vehicles.sender)[..16], vehicles.name, vehicles.description));
+        let mut vehicles = Vec::new();
+        let car_check = Car_check {
+            vin:params.read()
+      };
+        for car in &self.logs {
+            if{
+                car_check.vin==car.vin
+            vehicles.insert(0, format!("<{}> {} {}", &to_hex_string(car.sender), car.owners_name, car.description));
+            }
+            log(&vehicles.join("\n"));
         }
         log(&cars.join("\n"));
         Ok(())
