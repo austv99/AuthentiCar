@@ -5,7 +5,8 @@ import data from '../constants/car-items.json'
 import Grid from '@material-ui/core/Grid';
 // import hondaNsx from '../assets/honda.jpg';
 import { makeStyles } from '@material-ui/core/styles';
-import TopBar from '../components/TopBar';
+import AccountTopBar from '../components/AccountTopBar';
+import SavedNoItems from '../components/SavedNoItems';
 
 
 const useStyles = makeStyles(theme => ({
@@ -23,14 +24,15 @@ const AccountContainer = (props) => {
     const savedFrom = savedContext.saved;
     return (
     <>
-        <TopBar />
+        <AccountTopBar />
         <Grid 
             container 
             spacing={2} 
             justify='center' 
             className={classes.itemGrid}
         >
-            {Object.keys(savedFrom).map(id => (
+            {savedContext.count > 0 ? (
+            Object.keys(savedFrom).map(id => (
                 <Grid item>
                     <SavedCarComponent 
                         key = {id}
@@ -41,7 +43,11 @@ const AccountContainer = (props) => {
 
                     />
                 </Grid>
-            ))}
+            ))
+            ) : (
+                <SavedNoItems />
+            )}
+            
          </Grid>
     </>
 

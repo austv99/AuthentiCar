@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
+import { hidden } from 'ansi-colors';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -26,17 +27,9 @@ const TopBar = (props) => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-          <AppBar position="static">
+          <AppBar position="fixed">
             <Toolbar className={classes.toolbar}>
                 <Grid item>
-              {/* <Typography 
-                variant="h6" 
-                className={classes.title}
-                component={Route}
-                path="/"
-                >
-                AuthentiCar
-              </Typography> */}
               <Button 
                 color="inherit"
                 component={Link}

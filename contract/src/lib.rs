@@ -1,4 +1,3 @@
-// use std::error::Error;
 use smart_contract_macros::smart_contract;
 
 use smart_contract::log;
@@ -6,75 +5,74 @@ use smart_contract::payload::Parameters;
 use std::collections::VecDeque;
 
 struct Car {
-    sender: [u8; 32],
-    vin: String,
-    owners_name: String,
     description: String,
-    title: String,
-    id: String
-}
-struct Car_check{
-    vin:String
 }
 
 struct CarLog {
-    logs: VecDeque<Car>
+    logs: VecDeque<Car>,
 }
 
-fn to_hex_string(bytes: [u8; 32]) -> String {
-    let strs: Vec<String> = bytes.iter()
-        .map(|b| format!("{:02x}", b))
-        .collect();
-    strs.join("")
-}
+// const MAX_LOG_CAPACITY: usize = 50;
+// const MAX_MESSAGE_SIZE: usize = 240;
+
+// fn prune_old_messages(chat: &mut Chat) {
+//     if chat.logs.len() > MAX_LOG_CAPACITY {
+//         chat.logs.pop_front();
+//     }
+// }
+
+// fn to_hex_string(bytes: [u8; 32]) -> String {
+//     let strs: Vec<String> = bytes.iter().map(|b| format!("{:02x}", b)).collect();
+//     strs.join("")
+// }
 
 #[smart_contract]
 impl CarLog {
     fn init(_params: &mut Parameters) -> Self {
-        Self { logs: VecDeque::new() }
+        Self {
+            logs: VecDeque::new(),
+        }
     }
-#[basic functions]
+
     fn log_car(&mut self, params: &mut Parameters) -> Result<(), String> {
         let car = Car {
-            sender: params.sender, 
-            vin:params.read(),
-            owners_name: params.read(), 
             description: params.read(),
-            title: params.read(),
-            id: params.read()
-      };
-        if car.vin.len() == 0{
-            return Err("Car must have vin".into());
-        }
-        if car.description.len() == 0 {
-            return Err("Car must have description.".into());
-        }
-        if car.owners_name.len() == 0 {
-            return Err("Car must have a owner's name.".into());
-        }
-        if car.title.len() == 0{
-            return Err("Car must have title".into());
-        }
-        if car.id.len() == 0{
-            return Err("Car must have id number".into());
-        }
-#[Push new car into logs]
-        self.logs.push_back(car);
-        Ok(())
+        };
 
-    }
-    fn get_cars(&mut self, _params: & mut Parameters) -> Result<(), String> {
-        let mut vehicles = Vec::new();
-        let car_check = Car_check {
-            vin:params.read()
-      };
-        for car in &self.logs {
-            if car_check.vin==car.vin{
-            vehicles.insert(0, format!("<{}> {} {}", &to_hex_string(car.sender), car.owners_name, car.description()));
-            }
-            log(&vehicles.join("\n"))
+        // Ensure that messages are not empty.
+        if car.description.len() == 0 {
+            return Err("Description must not be empty.".into());
         }
+
+        // Ensure that message are at most 240 characters.
+        // if entry.message.len() > MAX_MESSAGE_SIZE {
+        //     return Err(format!(
+        //         "Message must not be more than {} characters.",
+        //         MAX_MESSAGE_SIZE
+        //     ));
+        // }
+
+        // Push chat message into logs.
+        self.logs.push_back(car);
+
+        // Prune old messages if necessary.
+        // prune_old_messages(self);
+
+        Ok(())
+    }
+
+    fn get_cars(&mut self, _params: &mut Parameters) -> Result<(), String> {
+        let mut cars = Vec::new();
+
+        for car in &self.logs {
+            cars.insert(
+                0,
+                format!("{}", car.description),
+            );
+        }
+
         log(&cars.join("\n"));
+
         Ok(())
     }
 }

@@ -2,37 +2,37 @@
     "items": [
         {
             "title": "Honda NSX",
-            "description": "A nice car",
+            "description": "ayyyy",
             "id": "yo",
-            "image": "../assets/honda.png"
+            "image": "honda.jpg"
             
         },
         {
             "title": "Honda NSX",
-            "description": "A nice car",
+            "description": "nahhh",
             "id": "yoyo",
-            "image": "package.png"
+            "image": "honda.jpg"
             
         },
         {
             "title": "Honda NSX",
             "description": "A nice car",
-            "id": 3,
-            "image": "package.png"
+            "id": "damn",
+            "image": "honda.jpg"
             
         },
         {
             "title": "Honda NSX",
             "description": "A nice car",
-            "id": 4,
-            "image": "package.png"
+            "id": "hi",
+            "image": "honda.jpg"
             
         },
         {
             "title": "Honda NSX",
             "description": "A nice car",
-            "id": 5,
-            "image": "package.png"
+            "id": "what",
+            "image": "honda.jpg"
             
         }
 
