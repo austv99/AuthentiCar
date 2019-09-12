@@ -30,7 +30,7 @@ const MainContainer = props => {
     const classes = useStyles();
     const propsContext = useContext(PropsContext);
     const savedContext = useContext(SavedContext);
-    const [client, node, clientErr] = useWavelet('http://localhost:3000/');
+    const [client, node, clientErr] = useWavelet('https://testnet.perlin.net');
     const [account, accountErr] = useAccount(client, '315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
     const [carLogs, setCarLogs] = useState([]);
   
@@ -46,11 +46,14 @@ const MainContainer = props => {
   
     const [contract] = useContract(client, '2a2a720997b8451b590668f0f76ff38a45d6cf77a605c61e7815fe521f391530', onUpdate, onLoad);
 
-    console.log(carLogs);
+    
     console.log('test');
 
+    useEffect(() => {
+        console.log(carLogs);
 
-
+    },[carLogs])
+    
 
     useEffect(() => {
         console.log("here");

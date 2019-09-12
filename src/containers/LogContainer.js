@@ -59,24 +59,25 @@ const useStyles = makeStyles(theme => ({
 
 const LogContainer = props =>  {
   const classes = useStyles();
-  const [client, node, clientErr] = useWavelet('http://localhost:3000/');
-  // const [carLogs, setCarLogs] = useState([]);
-  // const onUpdate = useCallback((contract) => {
-  //   const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
-  //   setCarLogs(contract.test(wallet, 'get_cars', BigInt(0)).logs);
-  // }, []);
+  const [client, node, clientErr] = useWavelet('https://testnet.perlin.net');
+  const [carLogs, setCarLogs] = useState([]);
+  const onUpdate = useCallback((contract) => {
+    const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
+    setCarLogs(contract.test(wallet, 'get_cars', BigInt(0)).logs);
+  }, []);
 
 
-  // const onLoad = useCallback((contract) => {
-  //   const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
-  //   setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
-  // }, []);
-  const [contract] = useContract(client, '2a2a720997b8451b590668f0f76ff38a45d6cf77a605c61e7815fe521f391530');
+  const onLoad = useCallback((contract) => {
+    const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
+    setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
+  }, []);
+  const [contract] = useContract(client, '2a2a720997b8451b590668f0f76ff38a45d6cf77a605c61e7815fe521f391530', onUpdate, onLoad);
   const logCar = (car) => {
+    console.log(typeof contract);
       console.log('test');
       const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
       contract && contract.call(wallet, 'log_car', BigInt(0), BigInt(25000), BigInt(0), {
-        type: 'String',
+        type: 'string',
         value: car
       }
       // }, {
@@ -93,6 +94,12 @@ const LogContainer = props =>  {
       //   value: values.id
       // });
       );
+      // console.log(contract.call(wallet, 'log_car', BigInt(0), BigInt(25000), BigInt(0), {
+      //   type: 'string',
+      //   value: 'yo'
+      // }
+      // ))
+      
     };
   
 
@@ -193,7 +200,7 @@ const LogContainer = props =>  {
           color="primary"
           // component={Link}
           // to="/"
-          onClick={() => logCar('yo')}
+          onClick={() => logCar( values.description )}
           >
           Save Car
         </Button>
