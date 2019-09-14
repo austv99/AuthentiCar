@@ -76,7 +76,7 @@ export default function OutlinedInputAdornments() {
     
 //   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
     let nameError = null;
     let passwordError = null;
     let password = values.password
@@ -97,10 +97,11 @@ export default function OutlinedInputAdornments() {
         passwordError = 'password cannot be empty'
         valid = false;
     }
-
-   
-    
     setValues({ ...values, nameError, passwordError });
+    if (nameError || passwordError) {
+      event.preventDefault();
+    }
+
     return valid;
   }
 
