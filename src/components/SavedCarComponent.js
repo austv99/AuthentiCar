@@ -35,15 +35,15 @@ function SavedCarComponent(props) {
     <Card className={classes.card}>
         <CardMedia
           className={classes.media}
-          image={`assets/${props.image}`}
+          image={`assets/${props.carImage}`}
           title=""
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {props.title}
+            {props.carName}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.description}
+            {props.carVin}
           </Typography>
         </CardContent>
       <CardActions>
@@ -53,7 +53,7 @@ function SavedCarComponent(props) {
           component={Link}
           to="/car"
           onClick={() => {
-            savedPropsContext.addToSavedProps(props.id);
+            savedPropsContext.addToSavedProps(props.carVin);
           }}
         >
           Learn More
@@ -62,7 +62,7 @@ function SavedCarComponent(props) {
             size="small" 
             color="primary"
             onClick={() => {
-                savedContext.removeFromSaved(props.id);
+                savedContext.removeFromSaved(props.carVin);
             }}
         >
           Delete

@@ -29,16 +29,26 @@ function CarDisplayComponent(props) {
     <Grid container spacing={2} justify='center' className={classes.itemGrid}>
         <Grid item>
         <Typography gutterBottom variant="h5" component="h2">
-            {props.title}
+            {props.carName}
           </Typography>
         </Grid>
         <Grid item>
-            <img src={`assets/${props.image}`} className={classes.media}/>
+            <img src={`assets/${props.carImage}`} className={classes.media}/>
         </Grid>
 
         <Grid item>
         <Typography gutterBottom variant="h5" component="h2">
-        {props.description}
+            {props.carVin}
+          </Typography>
+        </Grid>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            {props.carOwner}
+          </Typography>
+        </Grid>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            {props.carOdometer}
           </Typography>
         </Grid>
         

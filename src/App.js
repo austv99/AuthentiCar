@@ -18,6 +18,7 @@ import PropsContext from './contexts/PropsContext';
 import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
 import { Wavelet } from 'wavelet-client';
 import JSBI from "jsbi";
+import StreamContext from './contexts/StreamContext'
 // import { descriptions } from 'jest-config';
 const BigInt = JSBI.BigInt;
 
@@ -25,51 +26,29 @@ const BigInt = JSBI.BigInt;
 
 
 
+
 function App() {
-  // const [client, node, clientErr] = useWavelet('http://localhost:3000/');
-  // const [account, accountErr] = useAccount(client, '315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
-  // const [carLogs, setCarLogs] = useState([]);
+  const [stream, setStream] = useState({});
+  useEffect(() => {
+    console.log(stream);
+  }, [stream]);
 
-  // const onUpdate = useCallback((contract) => {
-  //   const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
-  //   setCarLogs(contract.test(wallet, 'get_cars', BigInt(0)).logs);
-  // }, []);
+  const addToStream = streamId => {
+    const oldAmount = stream[streamId] || 0;
+    const newStream = {...stream};
+    newStream[streamId] = oldAmount + 1;
+    setStream(newStream);
+  }
 
-  // const onLoad = useCallback((contract) => {
-  //   const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
-  //   setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
-  // }, []);
+  const removeFromStream = streamId => {
+    if (stream.hasOwnProperty(streamId)) {
+      const newStream = {...stream};
+      delete newStream[streamId];
+      setStream(newStream);
+    }
+  };
 
-  // const [contract] = useContract(client, '50d01c281137478cf52a3aa712bb079b7a661b85ed821c4d6c895a14f3fa09be', onUpdate, onLoad);
-
-  // const logCar = (car) => {
-  //   const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
-  //   contract && contract.call(wallet, 'log_car', BigInt(0), BigInt(25000), BigInt(0), {
-  //     type: 'string',
-  //     value: owner
-  //   }, {
-  //     type: 'string',
-  //     value: vin
-  //   }, {
-  //     type: 'string',
-  //     value: description
-  //   }, {
-  //     type: 'u32',
-  //     value: odometer
-  //   }, {
-  //     type: 'u32',
-  //     value: id
-  //   });
-  // };
-
-
-
-
-
-
-
-
-
+  const streamCount = Object.keys(stream).reduce((a,c) => a + stream[c], 0);
 
   const[saved, setSaved] = useState({});
   useEffect(() => {
@@ -85,11 +64,20 @@ function App() {
 
   const removeFromSaved = itemId => {
     if (saved.hasOwnProperty(itemId)) {
+      console.log('here'+ ' '+itemId);
       const newSaved = {...saved};
+      // console.log('key:'+ ' '+ Object.keys(newSaved)[itemId])
       delete newSaved[itemId];
       setSaved(newSaved);
     }
   };
+
+  const clearSaved = () => {
+    const clear = {};
+    setSaved(clear);
+
+
+  }
 
   const count = Object.keys(saved).reduce((a,c) => a + saved[c], 0);
 
@@ -113,20 +101,27 @@ function App() {
     }
   };
 
+  const clearProps = () => {
+    const clear = {};
+    setSavedProps(clear);
+  }
+
   const countProps = Object.keys(savedProps).reduce((a,c) => a + savedProps[c], 0);
   return (
     <ThemeProvider theme={theme}>
-      <PropsContext.Provider value={{savedProps, addToSavedProps, removeFromSavedProps, countProps}}>
-        <SavedContext.Provider value={{saved, addToSaved, removeFromSaved, count}}>
-          <Router>
-            <Route exact path="/" component={Main} />
-            <Route path="/search" component={Search} />
-            <Route path="/account" component={Account} />
-            <Route path="/car" component={Car} />
-            <Route path="/log" component={Log} />
-            <Route path="/login" component={Login} />
+      <PropsContext.Provider value={{savedProps, addToSavedProps, removeFromSavedProps, countProps, clearProps}}>
+        <SavedContext.Provider value={{saved, addToSaved, removeFromSaved, count, clearSaved}}>
+          <StreamContext.Provider value={{stream, addToStream, removeFromStream, streamCount}}>
+            <Router>
+              <Route exact path="/" component={Main} />
+              <Route path="/search" component={Search} />
+              <Route path="/account" component={Account} />
+              <Route path="/car" component={Car} />
+              <Route path="/log" component={Log} />
+              <Route path="/login" component={Login} />
 
-          </Router>
+            </Router>
+          </StreamContext.Provider>
         </SavedContext.Provider>
       </PropsContext.Provider>
     </ThemeProvider>

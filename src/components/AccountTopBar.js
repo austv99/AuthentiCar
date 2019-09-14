@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,6 +6,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
+import SavedContext from '../contexts/SavedContext';
+import PropsContext from '../contexts/PropsContext';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,12 +20,21 @@ const useStyles = makeStyles(theme => ({
       flexGrow: 1,
     },
   }));
+
+  const clearAll = (savedContext, propsContext) => {
+    savedContext.clearSaved();
+    propsContext.clearProps();
+    
+  }
   
 
 
 
 const AccountTopBar = (props) => {
     const classes = useStyles();
+    const savedContext = useContext(SavedContext);
+    const propsContext = useContext(PropsContext);
+
     return (
         <div className={classes.root}>
           <AppBar position="fixed">
@@ -59,6 +70,9 @@ const AccountTopBar = (props) => {
                   color="inherit"
                   component={Link}
                   to="/login"
+                  onClick={() => {
+                    clearAll(savedContext, propsContext);
+                  }}
                   >
                   Sign Out
                 </Button>

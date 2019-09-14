@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useCallback} from 'react';
 import SavedContext from '../contexts/SavedContext';
 import SavedCarComponent from '../components/SavedCarComponent';
 import data from '../constants/car-items.json'
@@ -7,6 +7,12 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountTopBar from '../components/AccountTopBar';
 import SavedNoItems from '../components/SavedNoItems';
+import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
+import { Wavelet } from 'wavelet-client';
+import JSBI from "jsbi";
+// import StreamContext from '../contexts/StreamContext';
+// import { descriptions } from 'jest-config';
+const BigInt = JSBI.BigInt;
 
 
 const useStyles = makeStyles(theme => ({
@@ -22,31 +28,102 @@ const AccountContainer = (props) => {
     const classes = useStyles();
     const savedContext = useContext(SavedContext);
     const savedFrom = savedContext.saved;
+    const savedKeys = Object.keys(savedFrom);
+    console.log(savedKeys);
+
+    const [client, node, clientErr] = useWavelet('https://testnet.perlin.net');
+    const [account, accountErr] = useAccount(client, '315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
+    const [carLogs, setCarLogs] = useState([]);
+  
+    const onUpdate = useCallback((contract) => {
+      const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
+      setCarLogs(contract.test(wallet, 'get_cars', BigInt(0)).logs);
+    }, []);
+  
+    const onLoad = useCallback((contract) => {
+      const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
+      setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
+    }, []);
+  
+    const [contract] = useContract(client, 'eec84af3d99c3fe26745a6da0cfa23029c3724ea725a49e91b1c5987335ca749', onUpdate, onLoad);
+
+    let entryRes = []
+    let comp = []
+    let carLogsLength = carLogs.length;
+        for (var i = 0; i < carLogsLength; i++) {
+            entryRes = carLogs[i].split('\n');
+        }
+        let entryResLength = entryRes.length;
+        for (var j = 0; j < entryResLength; j++) {
+            let stringRes = entryRes[j].split('|');
+            // console.log('whatwhatwhat');
+            // console.log(key);
+            for (var u = 0; u < savedKeys.length; u++) {
+
+                if (stringRes[1] === savedKeys[u]) {
+                    console.log('yo');
+                    let carName = stringRes[0];
+                    let carVin = stringRes[1];
+                    // streamContext.addToStream(stringRes[1]);
+                    let carOwner = stringRes[2];
+                    let carOdometer = stringRes[3];
+                    let carImage = '';
+                    if (carName.toUpperCase() === 'HONDA NSX') {
+                        carImage = 'honda_nsx.jpg'
+                    }
+                    comp.push(<Grid item> 
+                    <SavedCarComponent
+                        carName={carName}
+                        carVin={carVin}
+                        carOwner={carOwner}
+                        carOdometer={carOdometer}
+                        carImage={carImage} />
+                    </Grid>
+                    )
+
+                }
+            }
+        }
+
+
+
+
+
+
+
+
     return (
     <>
-        <AccountTopBar />
+        <AccountTopBar 
+        savedKeys={savedKeys}
+        />
         <Grid 
             container 
             spacing={2} 
             justify='center' 
             className={classes.itemGrid}
         >
-            {savedContext.count > 0 ? (
-            Object.keys(savedFrom).map(id => (
-                <Grid item>
-                    <SavedCarComponent 
-                        key = {id}
-                        id = {id}
-                        title={getItemFromId(id).title}
-                        image={getItemFromId(id).image}
-                        description={getItemFromId(id).description}
+            {/* {savedContext.count > 0 ? (
+            // Object.keys(savedFrom).map(vin => (
+            //     <Grid item>
+            //         <SavedCarComponent 
+            //             key = {vin}
+            //             vin = {vin}
+            //             carName={getItemFromId(vin).carName}
+            //             carImage={getItemFromId(vin).image}
+            //             description={getItemFromId(vin).description}
 
-                    />
-                </Grid>
-            ))
+            //         />
+            //     </Grid>
+            // ))
+            {comp}
             ) : (
                 <SavedNoItems />
-            )}
+            )} */}
+            {comp.length > 0 ? 
+            comp :
+            <SavedNoItems />
+            }
             
          </Grid>
     </>

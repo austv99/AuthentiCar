@@ -59,6 +59,7 @@ const useStyles = makeStyles(theme => ({
 
 const LogContainer = props =>  {
   const classes = useStyles();
+  // let id = 0;
   const [client, node, clientErr] = useWavelet('https://testnet.perlin.net');
   const [carLogs, setCarLogs] = useState([]);
   const onUpdate = useCallback((contract) => {
@@ -71,9 +72,20 @@ const LogContainer = props =>  {
     const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
     setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
   }, []);
-  const [contract] = useContract(client, '2a2a720997b8451b590668f0f76ff38a45d6cf77a605c61e7815fe521f391530', onUpdate, onLoad);
+  const [contract] = useContract(client, 'eec84af3d99c3fe26745a6da0cfa23029c3724ea725a49e91b1c5987335ca749', onUpdate, onLoad);
   const logCar = (car) => {
+    var carLogsLength = carLogs.length;
+    const carArray = car.split('|');
+    let valid = true;
+    for (var i = 0; i < carLogsLength; i++) {
+      let res = carLogs[i].split('|');
+      if (res[1] === carArray[1]) {
+        valid = false;
+      }
+    }
+
     console.log(typeof contract);
+    if (valid) {
       console.log('test');
       const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
       contract && contract.call(wallet, 'log_car', BigInt(0), BigInt(25000), BigInt(0), {
@@ -94,6 +106,7 @@ const LogContainer = props =>  {
       //   value: values.id
       // });
       );
+    }
       // console.log(contract.call(wallet, 'log_car', BigInt(0), BigInt(25000), BigInt(0), {
       //   type: 'string',
       //   value: 'yo'
@@ -101,16 +114,15 @@ const LogContainer = props =>  {
       // ))
       
     };
-  
-
+    
 
 
   const [values, setValues] = React.useState({
-    description: '',
+    name: '',
     vin: '',
     owner: '',
     odometer: '',
-    id: '',
+    id: 0,
   });
   const manValid = false;
   const handleChange = name => event => {
@@ -146,9 +158,8 @@ const LogContainer = props =>  {
         id="outlined-error"
         label="Car Name"
         className={classes.textField}
-        onChange={handleChange('description')}
-        value={values.description}
-        
+        onChange={handleChange('name')}
+        value={values.name}
         margin="normal"
         variant="outlined"
       />
@@ -176,11 +187,10 @@ const LogContainer = props =>  {
         className={classes.textField}
         onChange={handleChange('odometer')}
         value={values.odometer}
-        
         margin="normal"
         variant="outlined"
       />
-      <TextField
+      {/* <TextField
         id="outlined-error"
         label="ID"
         className={classes.textField}
@@ -188,7 +198,7 @@ const LogContainer = props =>  {
         value={values.id}
         margin="normal"
         variant="outlined"
-      />
+      /> */}
 
 
 
@@ -200,7 +210,11 @@ const LogContainer = props =>  {
           color="primary"
           // component={Link}
           // to="/"
-          onClick={() => logCar( values.description )}
+          onClick={() => 
+            // result=carLogs[0].split("|")
+            // values.id=result[4]
+
+            logCar( values.name + '|' + values.vin + '|' + values.owner + '|' + values.odometer)}
           >
           Save Car
         </Button>

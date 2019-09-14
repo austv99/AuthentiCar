@@ -36,15 +36,15 @@ function CarComponent(props) {
       
         <CardMedia
           className={classes.media}
-          image={`assets/${props.image}`}
+          image={`assets/${props.carImage}`}
           title=""
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {props.title}
+            {props.carName}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.description}
+            {props.carVin}
           </Typography>
         </CardContent>
       
@@ -53,7 +53,7 @@ function CarComponent(props) {
           size="small" 
           color="primary"
           onClick={() => {
-            savedContext.addToSaved(props.id);
+            savedContext.addToSaved(props.carVin);
           }}
         >
           Save
@@ -64,7 +64,7 @@ function CarComponent(props) {
           component={Link}
           to="/car"
           onClick={() => {
-            savedPropsContext.addToSavedProps(props.id);
+            savedPropsContext.addToSavedProps(props.carVin);
           }}
           >
           Learn More
