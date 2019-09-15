@@ -57,43 +57,79 @@ const CarContainer = props => {
       setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
     }, []);
   
-    const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
+    const [contract] = useContract(client, '28e0ea3defced9bac9d3dcc60d2d58d57bf3cb4d874b89e5ea2943e47bead49f', onUpdate, onLoad);
 
-    let entryRes = []
+    // let entryRes = []
     let comp = []
-    let carLogsLength = carLogs.length;
-        for (var i = 0; i < carLogsLength; i++) {
-            entryRes = carLogs[i].split('\n');
-        }
-        let entryResLength = entryRes.length;
-        for (var j = 0; j < entryResLength; j++) {
-            let stringRes = entryRes[j].split('|');
-            // console.log('whatwhatwhat');
-            // console.log(key);
-            if (stringRes[1] === key) {
-                console.log('yo');
-                let carName = stringRes[0];
-                let carVin = stringRes[1];
-                // streamContext.addToStream(stringRes[1]);
-                let carOwner = stringRes[2];
-                let carOdometer = stringRes[3];
-                let carImage = '';
-                carName = carName.toUpperCase();
-                if (carName === 'HONDA NSX') {
-                    carImage = 'honda_nsx.jpg'
-                }
-                comp.push(<Grid item> 
-                <CarDisplayComponent
-                    carName={carName}
-                    carVin={carVin}
-                    carOwner={carOwner}
-                    carOdometer={carOdometer}
-                    carImage={carImage} />
-                </Grid>
-                )
+    // let carLogsLength = carLogs.length;
+    //     for (var i = 0; i < carLogsLength; i++) {
+    //         entryRes = carLogs[i].split('\n');
+    //     }
+    //     let entryResLength = entryRes.length;
+    //     for (var j = 0; j < entryResLength; j++) {
+    //         let stringRes = entryRes[j].split('|');
+    //         // console.log('whatwhatwhat');
+    //         // console.log(key);
+    //         if (stringRes[1] === key) {
+    //             console.log('yo');
+    //             let carName = stringRes[0];
+    //             let carVin = stringRes[1];
+    //             // streamContext.addToStream(stringRes[1]);
+    //             let carOwner = stringRes[2];
+    //             let carOdometer = stringRes[3];
+    //             let carImage = '';
+    //             carName = carName.toUpperCase();
+    //             if (carName === 'HONDA NSX') {
+    //                 carImage = 'honda_nsx.jpg'
+    //             }
+    //             comp.push(<Grid item> 
+    //             <CarDisplayComponent
+    //                 carName={carName}
+    //                 carVin={carVin}
+    //                 carOwner={carOwner}
+    //                 carOdometer={carOdometer}
+    //                 carImage={carImage} />
+    //             </Grid>
+    //             )
 
-            }
+    //         }
+    //     }
+    let res = []
+        for (var i = 0; i < carLogs.length; i++) {
+            res = carLogs[i].split('\n');
         }
+        // console.log(res);
+    for (var i = 0; i < res.length; i++) {
+        let carOb = JSON.parse(res[i]);
+        let carName = '';
+        carName = carOb.carName;
+        carName = carName.toUpperCase();
+        let carImage = '';
+        if (carName === 'HONDA NSX') {
+            carImage = 'honda_nsx.jpg';
+        }
+        if (key === carOb.carVin) {
+            console.log(carOb.carAccidents);
+            console.log(carOb.carMaintenance);
+        comp.push(
+            <Grid item>
+                <CarDisplayComponent
+                carName={carName}
+                carVin={carOb.carVin}
+                carOwner={carOb.carOwner}
+                carOdometer={carOb.carOdometer}
+                carYear = {carOb.carYear}
+                carType = {carOb.carType}
+                carGearbox = {carOb.carGearbox}
+                carAccidents = {carOb.carAccidents}
+                carMaintenance = {carOb.carMaintenance}
+                carImage={carImage}
+                />
+            </Grid>
+        );
+        }
+
+    }
         let load = []
         if (comp.length === 0) {
             load.push(
@@ -119,33 +155,9 @@ const CarContainer = props => {
             spacing={2} 
             justify='center' 
             className={classes.itemGrid}
-        >
-            {/* {propsContext.countProps > 0 ? (
-            Object.keys(propsContext.savedProps).map(id => (
-                <Grid item>
-                    <CarDisplayComponent
-                        key = {id}
-                        id = {id}
-                        title={getItemFromId(id).title}
-                        image={getItemFromId(id).image}
-                        description={getItemFromId(id).description}
-
-                    />
-                </Grid>
-            )))
-             : (
-                <SavedNoItems />
-            )
-            } */}
-            
+        >          
             {load}
             {comp}
-            
-            
-            
-
-
-            
          </Grid>
      </>
     )

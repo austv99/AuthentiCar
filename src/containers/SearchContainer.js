@@ -12,6 +12,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
 import { Wavelet } from 'wavelet-client';
 import CarComponent from '../components/CarComponent';
+import Typography from '@material-ui/core/Typography';
 import JSBI from "jsbi";
 const BigInt = JSBI.BigInt;
 const useStyles = makeStyles(theme => ({
@@ -103,62 +104,106 @@ const SearchContainer = (props) => {
                     <CircularProgress className={classes.progress} />
                 </Grid>
             );
+        } else {
+          return (
+            <Grid item> 
+            <Typography gutterBottom variant="h5" component="h2">
+            Search using a VIN
+          </Typography>
+            </Grid>
+          )
         }
     }
-    const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
+    const [contract] = useContract(client, '28e0ea3defced9bac9d3dcc60d2d58d57bf3cb4d874b89e5ea2943e47bead49f', onUpdate, onLoad);
     console.log(carLogs);
     
     function compareVin () {
-    let objRes =[];
-    let entryRes = [];
-        let carLogsLength = carLogs.length;
-        for (var i = 0; i < carLogsLength; i++) {
-            entryRes = carLogs[i].split('\n');
+      let res = []
+      for (var i = 0; i < carLogs.length; i++) {
+        res = carLogs[i].split('\n');
+      }
+      for (var i = 0; i < res.length; i++) {
+        let carOb = JSON.parse(res[i]);
+        let carName = '';
+        carName = carOb.carName;
+        carName = carName.toUpperCase();
+        let carImage = '';
+        if (carName === 'HONDA NSX') {
+            carImage = 'honda_nsx.jpg';
         }
-        // let entryLengthReserve = 0;
-        let entryResLength = entryRes.length;
-        // console.log(entryResLength);
-        
-        // console.log(streamContext.stream)
-
-        for (var j = 0; j < entryResLength; j++) {
-            let stringRes = entryRes[j].split('|');
-            // resF.push(stringRes);
-            // console.log(stringRes[0])
-            // let object = {
-            //     carName: stringRes[0],
-            //     carVin: stringRes[1],
-            //     carOwner: stringRes[2],
-            //     carOdometer: stringRes[3]
-
-            // }
-            // objSave.push(object);
-            let carName = stringRes[0];
-            let carVin = stringRes[1];
-            // console.log(stringRes[1]);
-            // streamContext.addToStream(stringRes[1]);
-            let carOwner = stringRes[2];
-            let carOdometer = stringRes[3];
-            let carImage = '';
-            carName = carName.toUpperCase();
-            if (carName === 'HONDA NSX') {
-                carImage = 'honda_nsx.jpg'
-
-            }
-            if (carVin === search) {
-                return(<Grid item>
-                <CarComponent 
+        if (carOb.carVin === search) {
+        return(
+            <Grid item>
+                <CarComponent
                 carName={carName}
-                carVin={carVin}
-                carOwner={carOwner}
-                carOdometer={carOdometer}
+                carVin={carOb.carVin}
+                carOwner={carOb.carOwner}
+                carOdometer={carOb.carOdometer}
+                carYear = {carOb.carYear}
+                carGearbox = {carOb.carGearbox}
+                carAccidents = {carOb.carAccidents}
+                carMaintenance = {carOb.carMaintenance}
                 carImage={carImage}
                 />
-                </Grid>
-                );
-            }
-
+            </Grid>
+        );
         }
+      }
+
+
+
+
+
+    // let objRes =[];
+    // let entryRes = [];
+    //     let carLogsLength = carLogs.length;
+    //     for (var i = 0; i < carLogsLength; i++) {
+    //         entryRes = carLogs[i].split('\n');
+    //     }
+    //     // let entryLengthReserve = 0;
+    //     let entryResLength = entryRes.length;
+    //     // console.log(entryResLength);
+        
+    //     // console.log(streamContext.stream)
+
+    //     for (var j = 0; j < entryResLength; j++) {
+    //         let stringRes = entryRes[j].split('|');
+    //         // resF.push(stringRes);
+    //         // console.log(stringRes[0])
+    //         // let object = {
+    //         //     carName: stringRes[0],
+    //         //     carVin: stringRes[1],
+    //         //     carOwner: stringRes[2],
+    //         //     carOdometer: stringRes[3]
+
+    //         // }
+    //         // objSave.push(object);
+    //         let carName = stringRes[0];
+    //         let carVin = stringRes[1];
+    //         // console.log(stringRes[1]);
+    //         // streamContext.addToStream(stringRes[1]);
+    //         let carOwner = stringRes[2];
+    //         let carOdometer = stringRes[3];
+    //         let carImage = '';
+    //         carName = carName.toUpperCase();
+    //         if (carName === 'HONDA NSX') {
+    //             carImage = 'honda_nsx.jpg'
+
+    //         }
+    //         if (carVin === search) {
+    //             return(<Grid item>
+    //             <CarComponent 
+    //             carName={carName}
+    //             carVin={carVin}
+    //             carOwner={carOwner}
+    //             carOdometer={carOdometer}
+    //             carImage={carImage}
+    //             />
+    //             </Grid>
+    //             );
+    //         }
+
+    //     }
 }
 
     

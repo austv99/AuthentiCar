@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import SavedContext from '../contexts/SavedContext';
 import PropsContext from '../contexts/PropsContext';
+import LoginContext from '../contexts/LoginContext';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -21,9 +22,10 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-  const clearAll = (savedContext, propsContext) => {
+  const clearAll = (savedContext, propsContext, loginContext) => {
     savedContext.clearSaved();
     propsContext.clearProps();
+    loginContext.clearLogin();
     
   }
   
@@ -34,6 +36,21 @@ const AccountTopBar = (props) => {
     const classes = useStyles();
     const savedContext = useContext(SavedContext);
     const propsContext = useContext(PropsContext);
+    const loginContext = useContext(LoginContext);
+    let log = [];
+    if (loginContext.loginCount > 0) {
+      log.push(
+        <Grid item>
+                <Button 
+                  color="inherit"
+                  component={Link}
+                  to="/log"
+                  >
+                  Log Car
+                </Button>
+              </Grid>
+      );
+    }
 
     return (
         <div className={classes.root}>
@@ -56,22 +73,14 @@ const AccountTopBar = (props) => {
                 AuthentiCar
               </Button>
               </Grid>
-              <Grid item>
-                <Button 
-                  color="inherit"
-                  component={Link}
-                  to="/log"
-                  >
-                  Log Car
-                </Button>
-              </Grid>
+              {log}
               <Grid item>
                 <Button 
                   color="inherit"
                   component={Link}
                   to="/login"
                   onClick={() => {
-                    clearAll(savedContext, propsContext);
+                    clearAll(savedContext, propsContext, loginContext);
                   }}
                   >
                   Sign Out

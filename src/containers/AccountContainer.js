@@ -51,7 +51,7 @@ const AccountContainer = (props) => {
       
     }, []);
   
-    const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
+    const [contract] = useContract(client, '28e0ea3defced9bac9d3dcc60d2d58d57bf3cb4d874b89e5ea2943e47bead49f', onUpdate, onLoad);
 
     let entryRes = []
     let comp = []
@@ -73,42 +73,78 @@ const AccountContainer = (props) => {
             <SavedNoItems />
         )
     }
-    let carLogsLength = carLogs.length;
-        for (var i = 0; i < carLogsLength; i++) {
-            entryRes = carLogs[i].split('\n');
+    let res = []
+        for (var i = 0; i < carLogs.length; i++) {
+            res = carLogs[i].split('\n');
         }
-        let entryResLength = entryRes.length;
-        for (var j = 0; j < entryResLength; j++) {
-            let stringRes = entryRes[j].split('|');
-            // console.log('whatwhatwhat');
-            // console.log(key);
-            for (var u = 0; u < savedKeys.length; u++) {
-
-                if (stringRes[1] === savedKeys[u]) {
-                    console.log('yo');
-                    let carName = stringRes[0];
-                    let carVin = stringRes[1];
-                    // streamContext.addToStream(stringRes[1]);
-                    let carOwner = stringRes[2];
-                    let carOdometer = stringRes[3];
-                    let carImage = '';
-                    carName = carName.toUpperCase();
-                    if (carName === 'HONDA NSX') {
-                        carImage = 'honda_nsx.jpg'
-                    }
-                    comp.push(<Grid item> 
-                    <SavedCarComponent
+        // console.log(res);
+    for (var i = 0; i < res.length; i++) {
+        let carOb = JSON.parse(res[i]);
+        let carName = '';
+        carName = carOb.carName;
+        carName = carName.toUpperCase();
+        let carImage = '';
+        if (carName === 'HONDA NSX') {
+            carImage = 'honda_nsx.jpg';
+        }
+        for (var j = 0; j < savedKeys.length; j++) {
+            if (carOb.carVin === savedKeys[j]) {
+                comp.push(
+                    <Grid item>
+                        <SavedCarComponent
                         carName={carName}
-                        carVin={carVin}
-                        carOwner={carOwner}
-                        carOdometer={carOdometer}
-                        carImage={carImage} />
+                        carVin={carOb.carVin}
+                        carOwner={carOb.carOwner}
+                        carOdometer={carOb.carOdometer}
+                        carYear = {carOb.carYear}
+                        carGearbox = {carOb.carGearbox}
+                        carAccidents = {carOb.carAccidents}
+                        carMaintenance = {carOb.carMaintenance}
+                        carImage={carImage}
+                        />
                     </Grid>
-                    )
-
-                }
+                )
             }
         }
+        
+
+    }
+    // let carLogsLength = carLogs.length;
+    //     for (var i = 0; i < carLogsLength; i++) {
+    //         entryRes = carLogs[i].split('\n');
+    //     }
+    //     let entryResLength = entryRes.length;
+    //     for (var j = 0; j < entryResLength; j++) {
+    //         let stringRes = entryRes[j].split('|');
+    //         // console.log('whatwhatwhat');
+    //         // console.log(key);
+    //         for (var u = 0; u < savedKeys.length; u++) {
+
+    //             if (stringRes[1] === savedKeys[u]) {
+    //                 console.log('yo');
+    //                 let carName = stringRes[0];
+    //                 let carVin = stringRes[1];
+    //                 // streamContext.addToStream(stringRes[1]);
+    //                 let carOwner = stringRes[2];
+    //                 let carOdometer = stringRes[3];
+    //                 let carImage = '';
+    //                 carName = carName.toUpperCase();
+    //                 if (carName === 'HONDA NSX') {
+    //                     carImage = 'honda_nsx.jpg'
+    //                 }
+    //                 comp.push(<Grid item> 
+    //                 <SavedCarComponent
+    //                     carName={carName}
+    //                     carVin={carVin}
+    //                     carOwner={carOwner}
+    //                     carOdometer={carOdometer}
+    //                     carImage={carImage} />
+    //                 </Grid>
+    //                 )
+
+    //             }
+    //         }
+    //     }
 
 
 
@@ -129,23 +165,6 @@ const AccountContainer = (props) => {
             className={classes.itemGrid}
         >
             {load}
-            {/* {savedContext.count > 0 ? (
-            // Object.keys(savedFrom).map(vin => (
-            //     <Grid item>
-            //         <SavedCarComponent 
-            //             key = {vin}
-            //             vin = {vin}
-            //             carName={getItemFromId(vin).carName}
-            //             carImage={getItemFromId(vin).image}
-            //             description={getItemFromId(vin).description}
-
-            //         />
-            //     </Grid>
-            // ))
-            {comp}
-            ) : (
-                <SavedNoItems />
-            )} */}
             {comp.length > 0 ? 
             comp :
             <EndList />

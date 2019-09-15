@@ -11,6 +11,7 @@ import Car from './containers/CarContainer';
 import Log from './containers/LogContainer';
 import Login from './containers/LoginContainer';
 import PropsContext from './contexts/PropsContext';
+import LoginContext from './contexts/LoginContext';
 // import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
 // import { Wavelet } from 'wavelet-client';
 // import JSBI from "jsbi";
@@ -18,7 +19,6 @@ import PropsContext from './contexts/PropsContext';
 import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
 import { Wavelet } from 'wavelet-client';
 import JSBI from "jsbi";
-import StreamContext from './contexts/StreamContext'
 // import { descriptions } from 'jest-config';
 const BigInt = JSBI.BigInt;
 
@@ -28,27 +28,23 @@ const BigInt = JSBI.BigInt;
 
 
 function App() {
-  const [stream, setStream] = useState({});
+  const [login, setLogin] = useState({});
   useEffect(() => {
-    console.log(stream);
-  }, [stream]);
-
-  const addToStream = streamId => {
-    const oldAmount = stream[streamId] || 0;
-    const newStream = {...stream};
-    newStream[streamId] = oldAmount + 1;
-    setStream(newStream);
-  }
-
-  const removeFromStream = streamId => {
-    if (stream.hasOwnProperty(streamId)) {
-      const newStream = {...stream};
-      delete newStream[streamId];
-      setStream(newStream);
-    }
+    console.log(login);
+  }, [login]);
+  const addToLogin = itemId => {
+    const oldQty = login[itemId] || 0;
+    const newLogin = {...login};
+    newLogin[itemId] = oldQty + 1;
+    setLogin(newLogin);
   };
+  const clearLogin = () => {
+    const clear = {};
+    setLogin(clear);
+  }
+  const loginCount = Object.keys(login).reduce((a,c) => a + login[c], 0);
 
-  const streamCount = Object.keys(stream).reduce((a,c) => a + stream[c], 0);
+
 
   const[saved, setSaved] = useState({});
   useEffect(() => {
@@ -75,8 +71,6 @@ function App() {
   const clearSaved = () => {
     const clear = {};
     setSaved(clear);
-
-
   }
 
   const count = Object.keys(saved).reduce((a,c) => a + saved[c], 0);
@@ -111,7 +105,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <PropsContext.Provider value={{savedProps, addToSavedProps, removeFromSavedProps, countProps, clearProps}}>
         <SavedContext.Provider value={{saved, addToSaved, removeFromSaved, count, clearSaved}}>
-          <StreamContext.Provider value={{stream, addToStream, removeFromStream, streamCount}}>
+          <LoginContext.Provider value={{login, addToLogin, clearLogin, loginCount}}>
             <Router>
               <Route exact path="/" component={Main} />
               <Route path="/search" component={Search} />
@@ -121,7 +115,7 @@ function App() {
               <Route path="/login" component={Login} />
 
             </Router>
-          </StreamContext.Provider>
+            </LoginContext.Provider>
         </SavedContext.Provider>
       </PropsContext.Provider>
     </ThemeProvider>

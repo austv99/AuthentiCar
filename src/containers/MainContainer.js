@@ -58,20 +58,10 @@ const MainContainer = props => {
       }
     }, []);
   
-    const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
-    // let resA = [];
-    // let resF = [];
-    
-    console.log(carLogs);
-    let entryRes = [];
-    let objRes =[];
-    // let objSave = [];
-    // let add = false;
-    let tempVin = [];
-    // let result = new Object();
-    let carLogsLength = carLogs.length;
-    let load = []
-    // console.log(conn);
+    const [contract] = useContract(client, '28e0ea3defced9bac9d3dcc60d2d58d57bf3cb4d874b89e5ea2943e47bead49f', onUpdate, onLoad);
+    let load = [];
+    let objRes = [];
+    // console.log(carLogs);
     if (carLogs.length === 0 && conn) {
         load.push(
             <Grid item>
@@ -80,111 +70,107 @@ const MainContainer = props => {
 
         )
     }
-    
-        
-        for (var i = 0; i < carLogsLength; i++) {
-            entryRes = carLogs[i].split('\n');
+    let res = []
+        for (var i = 0; i < carLogs.length; i++) {
+            res = carLogs[i].split('\n');
         }
-        // let entryLengthReserve = 0;
-        let entryResLength = entryRes.length;
-        // console.log(entryResLength);
+    console.log(res);
         
-        // console.log(streamContext.stream)
-
-        for (var j = 0; j < entryResLength; j++) {
-            let stringRes = entryRes[j].split('|');
-            // resF.push(stringRes);
-            // console.log(stringRes[0])
-            // let object = {
-            //     carName: stringRes[0],
-            //     carVin: stringRes[1],
-            //     carOwner: stringRes[2],
-            //     carOdometer: stringRes[3]
-
-            // }
-            // objSave.push(object);
-            let carName = stringRes[0];
-            let carVin = stringRes[1];
-            // console.log(stringRes[1]);
-            // streamContext.addToStream(stringRes[1]);
-            let carOwner = stringRes[2];
-            let carOdometer = stringRes[3];
-            let carImage = '';
-            carName = carName.toUpperCase();
-            if (carName === 'HONDA NSX') {
-                carImage = 'honda_nsx.jpg'
-
-            }
-            if (carVin) {
-                objRes.push(<Grid item>
-                <CarComponent 
+    for (var j = 0; j < res.length; j++) {
+        let carOb = JSON.parse(res[j]);
+        console.log (carOb);
+        let carName = '';
+        carName = carOb.carName;
+        carName = carName.toUpperCase();
+        let carImage = '';
+        if (carName === 'HONDA NSX') {
+            carImage = 'honda_nsx.jpg';
+        }
+        objRes.push(
+            <Grid item>
+                <CarComponent
                 carName={carName}
-                carVin={carVin}
-                carOwner={carOwner}
-                carOdometer={carOdometer}
+                carVin={carOb.carVin}
+                carOwner={carOb.carOwner}
+                carOdometer={carOb.carOdometer}
+                carYear = {carOb.carYear}
+                carGearbox = {carOb.carGearbox}
+                carAccidents = {carOb.carAccidents}
+                carMaintenance = {carOb.carMaintenance}
                 carImage={carImage}
                 />
-                </Grid>
-                )
-            }
+            </Grid>
+        );
 
-        }
-        // let emp = []
-        // if (objRes.length == 0) {
-        //     load = []
-        //     load.push(
-        //     <Grid item>
-        //         <Typography gutterBottom variant="h5" component="h2">
-        //         No Cars Saved in Log
-        //         </Typography>
-
-        //     </Grid>)
-        // }
-
-        // for ( var i = 0; i < tempVin.length; i++) {
-        //     streamContext.addToStream(tempVin[i]);
-        // }
-        // console.log(tempVin);
-        // console.log(streamContext.streamCount)
-        // if (tempVin.length >= streamContext.streamCount) {
-        //     // let diff = tempVin.length - streamContext.streamCount;
-        //     // console.log(tempVin.length);
-        //     // console.log(streamContext.streamCount);
-        //     // console.log(diff);
-        //     for (var a = 0; a < tempVin.length; a++) {
-        //         if (streamContext.stream.hasOwnProperty(tempVin[a])) {
-        //             streamContext.removeFromStream(tempVin[a]);
-        //         }
-        //     }
-        //     for (var z = 0; z < tempVin.length; z++) {
-        //         streamContext.addToStream(tempVin[z]);
-        //     }
-        //     // streamContext.addToStream(tempVin[0]);
-        // }
-        // console.log(streamContext.stream);
-        // let vinCopy = [];
-        // let objCopy = [];
-        // // console.log(objSave);
-        // if (tempVin.length > streamContext.streamCount) {
-        //     vinCopy = [...tempVin];
-        //     objCopy = [...objSave];
-            
-        //     tempVin.shift();
-        //     objSave.shift();
-        // }
-
-        // for (var b = 0; b < tempVin.length; b++) {
-        //     streamContext.removeFromStream(objSave[b]);
-            
-        // }
-        // for (var c = 0; c < vinCopy.length; c++) {
-        //     streamContext.addToStream(objCopy[c]);
-        //     console.log(streamContext.stream);
-        // }
-
-        
-        
+    }
     
+
+
+
+
+
+
+
+    
+    // let entryRes = [];
+    // let objRes =[];
+    // // let objSave = [];
+    // // let add = false;
+    // let tempVin = [];
+    // // let result = new Object();
+    // let carLogsLength = carLogs.length;
+    // let load = []
+    // // console.log(conn);
+    
+    
+        
+    //     for (var i = 0; i < carLogsLength; i++) {
+    //         entryRes = carLogs[i].split('\n');
+    //     }
+    //     // let entryLengthReserve = 0;
+    //     let entryResLength = entryRes.length;
+    //     // console.log(entryResLength);
+        
+    //     // console.log(streamContext.stream)
+
+    //     for (var j = 0; j < entryResLength; j++) {
+    //         let stringRes = entryRes[j].split('|');
+    //         // resF.push(stringRes);
+    //         // console.log(stringRes[0])
+    //         // let object = {
+    //         //     carName: stringRes[0],
+    //         //     carVin: stringRes[1],
+    //         //     carOwner: stringRes[2],
+    //         //     carOdometer: stringRes[3]
+
+    //         // }
+    //         // objSave.push(object);
+    //         let carName = stringRes[0];
+    //         let carVin = stringRes[1];
+    //         // console.log(stringRes[1]);
+    //         // streamContext.addToStream(stringRes[1]);
+    //         let carOwner = stringRes[2];
+    //         let carOdometer = stringRes[3];
+    //         let carImage = '';
+    //         carName = carName.toUpperCase();
+    //         if (carName === 'HONDA NSX') {
+    //             carImage = 'honda_nsx.jpg'
+
+    //         }
+    //         if (carVin) {
+    //             objRes.push(<Grid item>
+    //             <CarComponent 
+    //             carName={carName}
+    //             carVin={carVin}
+    //             carOwner={carOwner}
+    //             carOdometer={carOdometer}
+    //             carImage={carImage}
+    //             />
+    //             </Grid>
+    //             )
+    //         }
+
+    //     }
     useEffect(() => {
         
     },[carLogs])
@@ -223,7 +209,7 @@ const MainContainer = props => {
 
 
 
-        {savedContext.count > 0 ? (
+        {/* {savedContext.count > 0 ? (
             Object.keys(savedContext.saved).map(id => (
                 <Grid item>
                     <SnackBarComponent />
@@ -232,7 +218,7 @@ const MainContainer = props => {
              : (
                 <EndList />
             )
-            }
+            } */}
         
      </Grid>
      </>

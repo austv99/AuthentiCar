@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import LoginTopbar from '../components/LoginTopBar'
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
+import LoginContext from '../contexts/LoginContext';
 //import { Button } from '@material-ui/core';
 //import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -58,6 +59,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function OutlinedInputAdornments() {
   const classes = useStyles();
+  const loginContext = useContext(LoginContext);
   const [values, setValues] = React.useState({
     //amount: '',
     nameError: null,
@@ -100,6 +102,11 @@ export default function OutlinedInputAdornments() {
     setValues({ ...values, nameError, passwordError });
     if (nameError || passwordError) {
       event.preventDefault();
+    }
+    console.log(values.name);
+    if (values.name === 'mechanic@authenticar.com') {
+      console.log('here');
+      loginContext.addToLogin(values.name);
     }
 
     return valid;

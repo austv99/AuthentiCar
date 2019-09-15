@@ -65,62 +65,68 @@ const LogContainer = props =>  {
     const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
     setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
   }, []);
-  const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
+  const [contract] = useContract(client, '28e0ea3defced9bac9d3dcc60d2d58d57bf3cb4d874b89e5ea2943e47bead49f', onUpdate, onLoad);
+  // console.log(carLogs);
   const logCar = (name, vin, owner, odometer, year, type, gearbox, accidents, maintenance ) => {
-    const car = name + '|' + vin + '|' + owner + '|' + odometer;
-    // const car = {
-    //   carName: name,
-    //   carVin: vin,
-    //   carOwner: owner,
-    //   carOdometer: odometer,
-    //   carYear: year,
-    //   carGearbox: gearbox,
-    //   carAccidents: accidents,
-    //   carMaintenance: maintenance,
-    // }
-    var carLogsLength = carLogs.length;
-    const carArray = car.split('|');
+    // const car = name + '|' + vin + '|' + owner + '|' + odometer;
+    let car = {
+      carName: name,
+      carVin: vin,
+      carOwner: owner,
+      carOdometer: odometer,
+      carYear: year,
+      carType: type,
+      carGearbox: gearbox,
+      carAccidents: accidents,
+      carMaintenance: maintenance,
+    }
+    // var carLogsLength = carLogs.length;
+    // const carArray = car.split('|');
     var valid = true;
-    
-    for (var i = 0; i < carLogsLength; i++) {
-      
-      let res = carLogs[i].split('|');
-      if (res[1] === carArray[1]) {
-        console.log('passed here');
-        valid = false;
+
+    let res = [];
+    let empty = false;
+      for (var i = 0; i <  carLogs.length; i++) {
+        if (carLogs[i] === "") {
+          empty = true;
+        }
+        res = carLogs[i].split('\n');
+      }
+    if (!empty) {
+      for (var i = 0; i < res.length; i++) {
+        let stringRes = JSON.parse(res[i]);
+        if (stringRes.vin === vin) {
+          valid = false;
+        }
       }
     }
-
+    car = JSON.stringify(car);
+      
+    
+    
+    // for (var i = 0; i < carLogsLength; i++) {
+      
+    //   let res = carLogs[i].split('\n');
+    //   console.log(res);
+    //   JSON.parse(carLogs[i])
+    //   if (res[1] === carArray[1]) {
+    //     console.log('passed here');
+    //     valid = false;
+    //   }
+    // }
     console.log(typeof contract);
     if (valid) {
       console.log('test');
+      JSON.stringify(car);
       const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
       contract && contract.call(wallet, 'log_car', BigInt(0), BigInt(25000), BigInt(0), {
         type: 'string',
         value: car
       }
-      // }, {
-      //   type: 'string',
-      //   value: values.vin
-      // }, {
-      //   type: 'string',
-      //   value: values.description
-      // }, {
-      //   type: 'u32',
-      //   value: values.odometer
-      // }, {
-      //   type: 'u32',
-      //   value: values.id
-      // });
       );
     }
-      // console.log(contract.call(wallet, 'log_car', BigInt(0), BigInt(25000), BigInt(0), {
-      //   type: 'string',
-      //   value: 'yo'
-      // }
-      // ))
       
-    };
+  };
     
 
 

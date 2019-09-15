@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 function CarDisplayComponent(props) {
   const classes = useStyles();
+  
 
 
 //   if (title === 'Honda NSX') {
@@ -31,35 +32,57 @@ function CarDisplayComponent(props) {
     <>
     
     <Grid container spacing={2} justify='center' className={classes.itemGrid}>
-    
+      <div className={classes.root}>
         <Grid item>
         <Typography gutterBottom variant="h5" component="h2">
             {props.carName}
           </Typography>
         </Grid>
-        <br/>
         <Grid item>
             <img src={`assets/${props.carImage}`} className={classes.media}/>
         </Grid>
         
-        <br/>
         <Grid item>
         <Typography gutterBottom variant="h5" component="h2">
             VIN: {props.carVin}
           </Typography>
         </Grid>
-        <br />
-        {/* <Grid item> */}
+        <Grid item>
         <Typography gutterBottom variant="h5" component="h2">
             Car Owner: {props.carOwner}
           </Typography>
-        {/* </Grid> */}
-        <br />
+        </Grid>
         <Grid item>
         <Typography gutterBottom variant="h5" component="h2">
             Odometer Reading: {props.carOdometer}
           </Typography>
         </Grid>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            Year: {props.carYear}
+          </Typography>
+        </Grid>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            Type: {props.carType}
+          </Typography>
+        </Grid>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            Transmission: {props.carGearbox}
+          </Typography>
+        </Grid>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            Accidents: {props.carAccidents}
+          </Typography>
+        </Grid>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            Maintenance History: {props.carMaintenance}
+          </Typography>
+        </Grid>
+        </div>
      </Grid>
      </>
     
