@@ -44,7 +44,7 @@ function CarComponent(props) {
             {props.carName}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.carVin}
+            VIN: {props.carVin}
           </Typography>
         </CardContent>
       

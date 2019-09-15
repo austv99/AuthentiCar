@@ -15,7 +15,7 @@ const EndListComponent = (props) => {
         >
             <Grid item>
             <Typography gutterBottom variant="h5" component="h2">
-            End of List!
+            
             </Typography>
             </Grid>
             

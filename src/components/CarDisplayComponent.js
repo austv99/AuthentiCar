@@ -13,7 +13,10 @@ const useStyles = makeStyles(theme => ({
     // padding: theme.spacing(2)
   },
   media: {
-    height: 100,
+    height: 250,
+  },
+  itemGrid: {
+    marginTop: 64,
   },
 }));
 
@@ -26,32 +29,37 @@ function CarDisplayComponent(props) {
 //   }
   return (
     <>
+    
     <Grid container spacing={2} justify='center' className={classes.itemGrid}>
+    
         <Grid item>
         <Typography gutterBottom variant="h5" component="h2">
             {props.carName}
           </Typography>
         </Grid>
+        <br/>
         <Grid item>
             <img src={`assets/${props.carImage}`} className={classes.media}/>
         </Grid>
-
-        <Grid item>
-        <Typography gutterBottom variant="h5" component="h2">
-            {props.carVin}
-          </Typography>
-        </Grid>
-        <Grid item>
-        <Typography gutterBottom variant="h5" component="h2">
-            {props.carOwner}
-          </Typography>
-        </Grid>
-        <Grid item>
-        <Typography gutterBottom variant="h5" component="h2">
-            {props.carOdometer}
-          </Typography>
-        </Grid>
         
+        <br/>
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            VIN: {props.carVin}
+          </Typography>
+        </Grid>
+        <br />
+        {/* <Grid item> */}
+        <Typography gutterBottom variant="h5" component="h2">
+            Car Owner: {props.carOwner}
+          </Typography>
+        {/* </Grid> */}
+        <br />
+        <Grid item>
+        <Typography gutterBottom variant="h5" component="h2">
+            Odometer Reading: {props.carOdometer}
+          </Typography>
+        </Grid>
      </Grid>
      </>
     

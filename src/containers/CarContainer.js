@@ -15,6 +15,7 @@ import { Wavelet } from 'wavelet-client';
 import JSBI from "jsbi";
 // import StreamContext from '../contexts/StreamContext';
 // import { descriptions } from 'jest-config';
+import CircularProgress from '@material-ui/core/CircularProgress';
 const BigInt = JSBI.BigInt;
 
 
@@ -56,7 +57,7 @@ const CarContainer = props => {
       setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
     }, []);
   
-    const [contract] = useContract(client, 'eec84af3d99c3fe26745a6da0cfa23029c3724ea725a49e91b1c5987335ca749', onUpdate, onLoad);
+    const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
 
     let entryRes = []
     let comp = []
@@ -77,7 +78,8 @@ const CarContainer = props => {
                 let carOwner = stringRes[2];
                 let carOdometer = stringRes[3];
                 let carImage = '';
-                if (carName.toUpperCase() === 'HONDA NSX') {
+                carName = carName.toUpperCase();
+                if (carName === 'HONDA NSX') {
                     carImage = 'honda_nsx.jpg'
                 }
                 comp.push(<Grid item> 
@@ -91,6 +93,15 @@ const CarContainer = props => {
                 )
 
             }
+        }
+        let load = []
+        if (comp.length === 0) {
+            load.push(
+                <Grid item>
+                    <CircularProgress className={classes.progress} />
+                </Grid>
+
+            )
         }
         
 
@@ -126,7 +137,8 @@ const CarContainer = props => {
                 <SavedNoItems />
             )
             } */}
-
+            
+            {load}
             {comp}
             
             

@@ -10,6 +10,8 @@ import SavedNoItems from '../components/SavedNoItems';
 import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
 import { Wavelet } from 'wavelet-client';
 import JSBI from "jsbi";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import EndList from '../components/EndListComponent';
 // import StreamContext from '../contexts/StreamContext';
 // import { descriptions } from 'jest-config';
 const BigInt = JSBI.BigInt;
@@ -34,21 +36,43 @@ const AccountContainer = (props) => {
     const [client, node, clientErr] = useWavelet('https://testnet.perlin.net');
     const [account, accountErr] = useAccount(client, '315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
     const [carLogs, setCarLogs] = useState([]);
-  
+    let conn = true;
     const onUpdate = useCallback((contract) => {
       const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
       setCarLogs(contract.test(wallet, 'get_cars', BigInt(0)).logs);
+      conn = false;
+      
     }, []);
   
     const onLoad = useCallback((contract) => {
       const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
       setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
+    conn = false;
+      
     }, []);
   
-    const [contract] = useContract(client, 'eec84af3d99c3fe26745a6da0cfa23029c3724ea725a49e91b1c5987335ca749', onUpdate, onLoad);
+    const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
 
     let entryRes = []
     let comp = []
+    let load = [];
+    if (carLogs.length > 0) {
+        conn = false;
+    }
+    if (conn && carLogs.length === 0) {
+        load.push(
+        <Grid item>
+            <CircularProgress className={classes.progress} />
+        </Grid>
+        )
+    }
+    // console.log(savedContext.count);
+    // console.log(conn);
+    if (!conn && savedContext.count === 0) {
+        load.push(
+            <SavedNoItems />
+        )
+    }
     let carLogsLength = carLogs.length;
         for (var i = 0; i < carLogsLength; i++) {
             entryRes = carLogs[i].split('\n');
@@ -68,7 +92,8 @@ const AccountContainer = (props) => {
                     let carOwner = stringRes[2];
                     let carOdometer = stringRes[3];
                     let carImage = '';
-                    if (carName.toUpperCase() === 'HONDA NSX') {
+                    carName = carName.toUpperCase();
+                    if (carName === 'HONDA NSX') {
                         carImage = 'honda_nsx.jpg'
                     }
                     comp.push(<Grid item> 
@@ -103,6 +128,7 @@ const AccountContainer = (props) => {
             justify='center' 
             className={classes.itemGrid}
         >
+            {load}
             {/* {savedContext.count > 0 ? (
             // Object.keys(savedFrom).map(vin => (
             //     <Grid item>
@@ -122,7 +148,7 @@ const AccountContainer = (props) => {
             )} */}
             {comp.length > 0 ? 
             comp :
-            <SavedNoItems />
+            <EndList />
             }
             
          </Grid>

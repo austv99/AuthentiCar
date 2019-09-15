@@ -42,6 +42,15 @@ const TopBar = (props) => {
                 <Button 
                   color="inherit"
                   component={Link}
+                  to="/search"
+                  >
+                  Search
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button 
+                  color="inherit"
+                  component={Link}
                   to="/account"
                   >
                   Account

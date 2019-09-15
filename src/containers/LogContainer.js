@@ -15,25 +15,18 @@ import { Link } from 'react-router-dom';
 import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
 import { Wavelet } from 'wavelet-client';
 import JSBI from "jsbi";
+import MenuItem from '@material-ui/core/MenuItem';
 // import { descriptions } from 'jest-config';
 const BigInt = JSBI.BigInt;
 
-const currencies = [
+const gearbox = [
   {
-    value: 'USD',
-    label: '$',
+    value: 'automatic',
+    label: 'Automatic',
   },
   {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
+    value: 'manual',
+    label: 'Manual',
   },
 ];
 
@@ -72,14 +65,28 @@ const LogContainer = props =>  {
     const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
     setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
   }, []);
-  const [contract] = useContract(client, 'eec84af3d99c3fe26745a6da0cfa23029c3724ea725a49e91b1c5987335ca749', onUpdate, onLoad);
-  const logCar = (car) => {
+  const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
+  const logCar = (name, vin, owner, odometer, year, type, gearbox, accidents, maintenance ) => {
+    const car = name + '|' + vin + '|' + owner + '|' + odometer;
+    // const car = {
+    //   carName: name,
+    //   carVin: vin,
+    //   carOwner: owner,
+    //   carOdometer: odometer,
+    //   carYear: year,
+    //   carGearbox: gearbox,
+    //   carAccidents: accidents,
+    //   carMaintenance: maintenance,
+    // }
     var carLogsLength = carLogs.length;
     const carArray = car.split('|');
-    let valid = true;
+    var valid = true;
+    
     for (var i = 0; i < carLogsLength; i++) {
+      
       let res = carLogs[i].split('|');
       if (res[1] === carArray[1]) {
+        console.log('passed here');
         valid = false;
       }
     }
@@ -122,20 +129,15 @@ const LogContainer = props =>  {
     vin: '',
     owner: '',
     odometer: '',
-    id: 0,
+    year: '',
+    type: '',
+    gearbox: '',
+    accidents: '',
+    maintenance: '',
   });
   const manValid = false;
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
-    // if (values.name.length === 1) {
-    //     // console.log(values.name);
-    //     console.log('wrong');
-    //     values.name=""
-    // }
-
-    console.log(values.description);
-        
-    
   };
 
   return (
@@ -190,15 +192,71 @@ const LogContainer = props =>  {
         margin="normal"
         variant="outlined"
       />
-      {/* <TextField
+      <TextField
         id="outlined-error"
-        label="ID"
+        label="Year"
         className={classes.textField}
-        onChange={handleChange('id')}
-        value={values.id}
+        onChange={handleChange('year')}
+        value={values.year}
         margin="normal"
         variant="outlined"
-      /> */}
+      />
+      <TextField
+        id="outlined-error"
+        label="Type"
+        className={classes.textField}
+        onChange={handleChange('type')}
+        value={values.type}
+        margin="normal"
+        variant="outlined"
+      />
+      <TextField
+        id="outlined-select-currency"
+        select
+        label="Transmission"
+        className={classes.textField}
+        value={values.gearbox}
+        onChange={handleChange('gearbox')}
+        SelectProps={{
+          MenuProps: {
+            className: classes.menu,
+          },
+        }}
+        helperText="Please select type"
+        margin="normal"
+        variant="outlined"
+      >
+        {gearbox.map(option => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+
+      </TextField>
+      <TextField
+        id="outlined-multiline-flexible"
+        label="Accidents"
+        multiline
+        rowsMax="4"
+        value={values.accidents}
+        onChange={handleChange('accidents')}
+        className={classes.textField}
+        margin="normal"
+        helperText="Please describe in detail"
+        variant="outlined"
+      />
+      <TextField
+        id="outlined-multiline-flexible"
+        label="Maintenance Report"
+        multiline
+        rowsMax="4"
+        value={values.maintenance}
+        onChange={handleChange('maintenance')}
+        className={classes.textField}
+        margin="normal"
+        helperText="Please describe in detail"
+        variant="outlined"
+      />
 
 
 
@@ -214,7 +272,8 @@ const LogContainer = props =>  {
             // result=carLogs[0].split("|")
             // values.id=result[4]
 
-            logCar( values.name + '|' + values.vin + '|' + values.owner + '|' + values.odometer)}
+            logCar(values.name, values.vin, values.owner, values.odometer, values.year, values.type, values.gearbox, values.accidents, values.maintenance)
+          }
           >
           Save Car
         </Button>

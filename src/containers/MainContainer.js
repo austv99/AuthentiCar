@@ -14,16 +14,21 @@ import EndList from '../components/EndListComponent';
 import { useWavelet, useAccount, useContract } from 'react-use-wavelet';
 import { Wavelet } from 'wavelet-client';
 import JSBI from "jsbi";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 // import StreamContext from '../contexts/StreamContext';
 // import { descriptions } from 'jest-config';
 const BigInt = JSBI.BigInt;
 
 
 
-const useStyles = makeStyles(them => ({
+const useStyles = makeStyles(theme => ({
     itemGrid: {
         marginTop: 64,
-    }
+    },
+    progress: {
+        margin: theme.spacing(2),
+      },
 
 }))
 
@@ -36,22 +41,28 @@ const MainContainer = props => {
     const [client, node, clientErr] = useWavelet('https://testnet.perlin.net');
     const [account, accountErr] = useAccount(client, '315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
     const [carLogs, setCarLogs] = useState([]);
-  
+    let conn = true;
     const onUpdate = useCallback((contract) => {
       const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
       setCarLogs(contract.test(wallet, 'get_cars', BigInt(0)).logs);
+      if (carLogs.length === 0) {
+        conn = false;
+      }
     }, []);
   
     const onLoad = useCallback((contract) => {
       const wallet = Wavelet.loadWalletFromPrivateKey('315f62c8f44fb6bf8351c9051b466ea93bf204706cc76a3878196caf253205f2d2b782d908775508aa65ecbc3327f78b200518623282bd75b617d72b07bc8612');
       setCarLogs(contract.test(wallet,'get_cars', BigInt(0)).logs);
+      if (carLogs.length === 0) {
+          conn = false;
+      }
     }, []);
   
-    const [contract] = useContract(client, 'eec84af3d99c3fe26745a6da0cfa23029c3724ea725a49e91b1c5987335ca749', onUpdate, onLoad);
+    const [contract] = useContract(client, '437696d7c018e635c98823856b4d83f0787084396431c42b8331c34ef88406d7', onUpdate, onLoad);
     // let resA = [];
     // let resF = [];
     
-    console.log('test');
+    console.log(carLogs);
     let entryRes = [];
     let objRes =[];
     // let objSave = [];
@@ -59,6 +70,16 @@ const MainContainer = props => {
     let tempVin = [];
     // let result = new Object();
     let carLogsLength = carLogs.length;
+    let load = []
+    // console.log(conn);
+    if (carLogs.length === 0 && conn) {
+        load.push(
+            <Grid item>
+                <CircularProgress className={classes.progress} />
+            </Grid>
+
+        )
+    }
     
         
         for (var i = 0; i < carLogsLength; i++) {
@@ -84,26 +105,42 @@ const MainContainer = props => {
             // objSave.push(object);
             let carName = stringRes[0];
             let carVin = stringRes[1];
+            // console.log(stringRes[1]);
             // streamContext.addToStream(stringRes[1]);
             let carOwner = stringRes[2];
             let carOdometer = stringRes[3];
             let carImage = '';
-            if (carName.toUpperCase() === 'HONDA NSX') {
+            carName = carName.toUpperCase();
+            if (carName === 'HONDA NSX') {
                 carImage = 'honda_nsx.jpg'
 
             }
-            objRes.push(<Grid item>
-            <CarComponent 
-            carName={carName}
-            carVin={carVin}
-            carOwner={carOwner}
-            carOdometer={carOdometer}
-            carImage={carImage}
-            />
-            </Grid>
-            )
+            if (carVin) {
+                objRes.push(<Grid item>
+                <CarComponent 
+                carName={carName}
+                carVin={carVin}
+                carOwner={carOwner}
+                carOdometer={carOdometer}
+                carImage={carImage}
+                />
+                </Grid>
+                )
+            }
 
         }
+        // let emp = []
+        // if (objRes.length == 0) {
+        //     load = []
+        //     load.push(
+        //     <Grid item>
+        //         <Typography gutterBottom variant="h5" component="h2">
+        //         No Cars Saved in Log
+        //         </Typography>
+
+        //     </Grid>)
+        // }
+
         // for ( var i = 0; i < tempVin.length; i++) {
         //     streamContext.addToStream(tempVin[i]);
         // }
@@ -174,7 +211,7 @@ const MainContainer = props => {
                 <CarComponent {...x}/>
             </Grid>
         ))} */}
-
+        {load}
         {objRes}
 
         
