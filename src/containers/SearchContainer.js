@@ -131,6 +131,18 @@ const SearchContainer = (props) => {
         if (carName === 'HONDA NSX') {
             carImage = 'honda_nsx.jpg';
         }
+        if (carName === 'TOYOTA CAMRY') {
+          carImage = 'toyota_camry.jpg';
+        }
+        if (carName === 'CADILLAC ESCALADE') {
+          carImage = 'cadillac_escalade.jpg';
+        }
+        if (carName === 'AUDI A8') {
+          carImage = 'audi_a8.jpg';
+      }
+      if (carName === 'AUDI A4') {
+        carImage = 'audi_a4.png';
+    }
         if (carOb.carVin === search) {
         return(
             <Grid item>

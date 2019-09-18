@@ -87,6 +87,19 @@ const AccountContainer = (props) => {
         if (carName === 'HONDA NSX') {
             carImage = 'honda_nsx.jpg';
         }
+        if (carName === 'TOYOTA CAMRY') {
+            carImage = 'toyota_camry.jpg';
+        }
+        if (carName === 'CADILLAC ESCALADE') {
+            carImage = 'cadillac_escalade.jpg';
+        }
+        if (carName === 'AUDI A8') {
+            carImage = 'audi_a8.jpg';
+        }
+        if (carName === 'AUDI A4') {
+            carImage = 'audi_a4.png';
+        }
+        
         for (var j = 0; j < savedKeys.length; j++) {
             if (carOb.carVin === savedKeys[j]) {
                 comp.push(
